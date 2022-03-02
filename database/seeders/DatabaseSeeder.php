@@ -57,5 +57,9 @@ class DatabaseSeeder extends Seeder
 
         Product::factory()->create($beer);
         Product::factory()->create($water);
+
+        $this->call([
+            CheckoutSeeder::class
+        ]);
     }
 }
