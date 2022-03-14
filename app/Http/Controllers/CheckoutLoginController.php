@@ -16,7 +16,6 @@ class CheckoutLoginController extends Controller
 {
 
 
-
     /**
      * Display the login view.
      *

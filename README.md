@@ -8,14 +8,14 @@ A cashless payment software solution
 ### Quick start
 1. Clone project
 2. `$ cd cashier`
-3. `$ docker run --rm \
+4. `$ docker run --rm \
    -u "$(id -u):$(id -g)" \
    -v $(pwd):/var/www/html \
    -w /var/www/html \
    laravelsail/php80-composer:latest \
    composer install --ignore-platform-reqs`
-4. `$ cp .env.example .env`
-5. Open `.env` and make it fit your needs. Example:
+5. `$ cp .env.example .env`
+6. Open `.env` and make it fit your needs. Example:
 ```dotenv
 APP_NAME=Cashier
 APP_ENV=local
@@ -46,7 +46,7 @@ DB_PASSWORD=
 `$ sail php artisan db:seed`
 
 ### Run project
-1. `$ npm run dev`
+1. `$ sail npm run dev`
 2. Open browser and navigate to `localhost`
 
 
