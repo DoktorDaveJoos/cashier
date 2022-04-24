@@ -15,13 +15,17 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
 
-            $table->foreignId('user_id');
             $table->foreignId('from_id');
+            $table->foreignId('to_id');
 
             $table->float('amount');
             $table->string('description');
+
+            $table->timestamps();
+
+            $table->foreign('from_id')->references('id')->on('users');
+            $table->foreign('to_id')->references('id')->on('users');
         });
     }
 

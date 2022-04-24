@@ -12,7 +12,7 @@ A cashless payment software solution
    -u "$(id -u):$(id -g)" \
    -v $(pwd):/var/www/html \
    -w /var/www/html \
-   laravelsail/php80-composer:latest \
+   laravelsail/php81-composer:latest \
    composer install --ignore-platform-reqs`
 5. `$ cp .env.example .env`
 6. Open `.env` and make it fit your needs. Example:

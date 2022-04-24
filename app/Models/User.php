@@ -12,6 +12,8 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    private const TYPE_FESTIVAL = 'festival';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -21,6 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'type'
     ];
 
     /**
@@ -42,6 +45,13 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function isFestival(): bool
+    {
+        ray($this->type, self::TYPE_FESTIVAL, $this->type === self::TYPE_FESTIVAL);
+
+        return $this->type === self::TYPE_FESTIVAL;
+    }
+
     public function checkouts()
     {
         return $this->hasMany('App\Models\Checkout');
@@ -50,5 +60,29 @@ class User extends Authenticatable
     public function products()
     {
         return $this->hasMany('App\Models\Product');
+    }
+
+    public function transactionsIn()
+    {
+        return $this->hasMany(Transaction::class, 'to_id');
+    }
+
+    public function transactionsOut()
+    {
+        return $this->hasMany(Transaction::class, 'from_id');
+    }
+
+    public function transactions()
+    {
+        return Transaction::with(['from', 'to'])
+            ->where('from_id', '=', $this->id)
+            ->orWhere('to_id', '=', $this->id)
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
+    }
+
+    public function getBalance(): float
+    {
+        return $this->transactionsIn()->sum('amount') - $this->transactionsOut()->sum('amount');
     }
 }

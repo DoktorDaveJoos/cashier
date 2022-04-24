@@ -31,4 +31,8 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
+Route::post('/dashboard', [DashboardController::class, 'fake'])
+    ->middleware(['auth', 'verified'])
+    ->name('fake');
+
 require __DIR__ . '/auth.php';
