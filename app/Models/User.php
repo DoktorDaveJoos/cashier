@@ -47,8 +47,6 @@ class User extends Authenticatable
 
     public function isFestival(): bool
     {
-        ray($this->type, self::TYPE_FESTIVAL, $this->type === self::TYPE_FESTIVAL);
-
         return $this->type === self::TYPE_FESTIVAL;
     }
 

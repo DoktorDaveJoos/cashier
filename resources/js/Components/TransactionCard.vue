@@ -1,38 +1,37 @@
 <script setup>
+import InitialsRoundAvatar from '@/Components/InitialsRoundAvatar';
+
 const props = defineProps({
     transaction: Object,
     userId: Number,
+    size: {
+        type: String,
+        default: 'medium'
+    }
 });
 
-const { transaction, userId } = props;
+const { transaction, userId, size } = props;
 
 const isReceiver = transaction.to_id === userId;
 
-const infoName = isReceiver ? transaction.from.name : transaction.to.name;
+const isMedium = size === 'medium';
 
-const initials = () => {
-    const split = infoName.split(" ", 2);
-    return split.reduce((p, c) => p + c.charAt(0).toUpperCase(), '');
-}
 </script>
 
 <template>
     <div class="bg-gray-100 flex rounded-lg px-8 py-4 rounded-lg">
-        <div
-            class="bg-gray-400 flex items-center justify-center rounded-full w-12 h-12 mr-8 text-gray-900"
-        >
-            {{ initials() }}
-        </div>
+        <initials-round-avatar class="mr-8" :name="$page.props.auth.user.name" :size="isMedium ? '12' : '8'"></initials-round-avatar>
         <div class="flex flex-col justify-center">
-            <span class="text-xs text-gray-700">{{ infoName }}</span>
-            <span class="text-gray-800">{{ transaction.description }}</span>
+            <span class="text-xs text-gray-700">{{  isReceiver ? transaction.from.name : transaction.to.name }}</span>
+            <span class="text-gray-800" :class="isMedium ? null : 'text-xs font-semibold'">{{ transaction.description }}</span>
         </div>
         <div
             :class="[
                 {
                     'text-green-600 font-semibold': isReceiver,
+                    'text-xl': isMedium
                 },
-                'grow flex justify-end items-center text-xl',
+                'grow flex justify-end items-center',
             ]"
         >
             <div class="flex items-baseline">

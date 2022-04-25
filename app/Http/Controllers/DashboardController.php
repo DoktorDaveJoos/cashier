@@ -50,11 +50,17 @@ class DashboardController extends Controller
 
     private function handleFestivalIndex(Request $request): \Inertia\Response
     {
-        $user = User::with(['checkouts', 'products'])->where('id', $request->user()->id)->first();
+        $user = $request->user();
+
+        $transCmd = DB::selectOne('select count(*) as count from transactions where from_id = ? or to_id = ?', [$user->id, $user->id]);
+        $transactions = $user->transactions();
+
         return Inertia::render('DashboardFestival', [
-            'credit' => $user->credit,
+            'balance' => $user->getBalance(),
             'checkouts' => $user->checkouts,
             'products' => $user->products,
+            'transactions' => $transactions,
+            'transactionCount' => $transCmd->count
         ]);
     }
 }
