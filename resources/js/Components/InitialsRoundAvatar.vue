@@ -18,7 +18,7 @@ const initials = () => {
 <template>
     <div
         class="bg-gray-400 flex items-center justify-center rounded-full text-gray-900"
-        :class="`w-${size} h-${size}`"
+        :class="`w-${size} h-${size} ${ size === '12' ? null : 'text-xs'  }`"
     >
         {{ initials() }}
     </div>

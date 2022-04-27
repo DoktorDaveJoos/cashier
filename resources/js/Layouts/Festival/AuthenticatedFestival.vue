@@ -1,19 +1,6 @@
 <script setup>
 import InitialsRoundAvatar from "@/Components/InitialsRoundAvatar";
-import TransactionCard from "@/Components/TransactionCard";
-
-const props = defineProps({
-    balance: Number,
-    transactionCount: Number,
-    checkouts: Array,
-    products: Array,
-    transactions: Object,
-});
-
-const { transactions } = props;
-
-console.log(transactions);
-</script>
+import {Link} from '@inertiajs/inertia-vue3';</script>
 
 <template>
     <div>
@@ -118,14 +105,12 @@ console.log(transactions);
                     >
                         <span
                             class="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
-                            >CASHIER</span
+                        >CASHIER</span
                         >
                     </div>
                     <nav class="mt-5 flex-1 px-4 space-y-2">
-                        <a
-                            href="#"
-                            class="bg-gray-200 text-gray-500 text-sm font-semibold group flex items-center px-2 py-2 rounded-md hover:bg-gray-400 hover:text-white transition ease-in-out duration-150"
-                        >
+                        <Link href="/dashboard"
+                              class="bg-gray-200 text-gray-500 text-sm font-semibold group flex items-center px-2 py-2 rounded-md hover:bg-gray-400 hover:text-white transition ease-in-out duration-150">
                             <svg
                                 class="mr-3 ml-2 flex-shrink-0 h-4 w-4 text-gray-500 group-hover:text-white"
                                 xmlns="http://www.w3.org/2000/svg"
@@ -142,30 +127,33 @@ console.log(transactions);
                                 />
                             </svg>
                             Dashboard
-                        </a>
-
-                        <a
-                            href="#"
-                            class="bg-gray-200 text-gray-500 text-sm font-semibold group flex items-center px-2 py-2 rounded-md hover:bg-gray-400 hover:text-white transition ease-in-out duration-150"
-                        >
-                            <svg
-                                class="mr-3 ml-2 flex-shrink-0 h-4 w-4 text-gray-500 group-hover:text-white"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                                aria-hidden="true"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                                />
+                        </Link>
+                        <Link href="/checkouts"
+                              class="bg-gray-200 text-gray-500 text-sm font-semibold group flex items-center px-2 py-2 rounded-md hover:bg-gray-400 hover:text-white transition ease-in-out duration-150">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 class="mr-3 ml-2 flex-shrink-0 h-4 w-4 text-gray-500 group-hover:text-white"
+                                 fill="none"
+                                 viewBox="0 0 24 24"
+                                 stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                             </svg>
                             Checkouts
-                        </a>
-                    
+                        </Link>
+                        <Link href="/products"
+                              class="bg-gray-200 text-gray-500 text-sm font-semibold group flex items-center px-2 py-2 rounded-md hover:bg-gray-400 hover:text-white transition ease-in-out duration-150">
+
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 class="mr-3 ml-2 flex-shrink-0 h-4 w-4 text-gray-500 group-hover:text-white"
+                                 fill="none"
+                                 viewBox="0 0 24 24"
+                                 stroke="currentColor"
+                                 stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                            Products
+                        </Link>
                     </nav>
                 </div>
                 <div class="flex-shrink-0 flex border-t border-gray-200 p-4">
@@ -225,56 +213,7 @@ console.log(transactions);
                     </div>
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
                         <!-- Replace with your content -->
-                        <div class="py-8 grid gap-4 grid-cols-2">
-                            <div class="flex flex-col">
-                                <span class="text-sm text-gray-400"
-                                    >Balance</span
-                                >
-                                <span
-                                    class="text-4xl text-gray-800 font-semibold"
-                                    >{{ balance }}€</span
-                                >
-
-                                <div class="flex mt-4">
-                                    <button
-                                        class="px-3 py-2 bg-indigo-200 text-indigo-700 text-xs rounded-lg mr-4"
-                                    >
-                                        Charge or Cashout
-                                    </button>
-                                    <button
-                                        class="px-3 py-2 bg-indigo-200 text-indigo-700 text-xs rounded-lg"
-                                    >
-                                        Generate Report
-                                    </button>
-                                </div>
-
-                                <div class="flex flex-col mt-40">
-                                    <span class="text-xs text-gray-400"
-                                        >Transactions</span
-                                    >
-                                    <span class="text-3xl text-gray-800">{{
-                                        transactionCount
-                                    }}</span>
-
-                                    <span class="text-xs text-gray-400 mt-6"
-                                        >Checkouts registered</span
-                                    >
-                                    <span class="text-3xl text-gray-800">{{
-                                        checkouts.length
-                                    }}</span>
-                                </div>
-                            </div>
-                            <div class="space-y-4">
-                                <span class="text-gray-400 text-sm">Most recent transactions</span>
-                                <transaction-card
-                                    v-for="transaction in transactions.data"
-                                    :transaction="transaction"
-                                    :userId="$page.props.auth.user.id"
-                                    :key="transaction.id"
-                                    size="small"
-                                ></transaction-card>
-                            </div>
-                        </div>
+                        <slot />
                         <!-- /End replace -->
                     </div>
                 </div>

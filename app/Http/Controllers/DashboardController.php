@@ -55,12 +55,32 @@ class DashboardController extends Controller
         $transCmd = DB::selectOne('select count(*) as count from transactions where from_id = ? or to_id = ?', [$user->id, $user->id]);
         $transactions = $user->transactions();
 
-        return Inertia::render('DashboardFestival', [
+        return Inertia::render('Festival/DashboardFestival', [
             'balance' => $user->getBalance(),
             'checkouts' => $user->checkouts,
             'products' => $user->products,
             'transactions' => $transactions,
             'transactionCount' => $transCmd->count
+        ]);
+    }
+
+    public function checkouts(Request $request)
+    {
+        /** @var User $user */
+        $user = auth()->user();
+
+        return Inertia::render('Festival/Checkouts', [
+            'checkouts' => $user->checkouts,
+        ]);
+    }
+
+    public function products(Request $request)
+    {
+        /** @var User $user */
+        $user = auth()->user();
+
+        return Inertia::render('Festival/Products', [
+            'products' => $user->products,
         ]);
     }
 }

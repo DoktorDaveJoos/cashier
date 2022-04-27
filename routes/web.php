@@ -35,4 +35,12 @@ Route::post('/dashboard', [DashboardController::class, 'fake'])
     ->middleware(['auth', 'verified'])
     ->name('fake');
 
+Route::get('/checkouts', [DashboardController::class, 'checkouts'])
+    ->middleware(['auth', 'verified'])
+    ->name('checkouts');
+
+Route::get('/products', [DashboardController::class, 'products'])
+    ->middleware(['auth', 'verified'])
+    ->name('products');
+
 require __DIR__ . '/auth.php';

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -23,7 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'type'
+        'type',
     ];
 
     /**
@@ -60,16 +59,6 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Product');
     }
 
-    public function transactionsIn()
-    {
-        return $this->hasMany(Transaction::class, 'to_id');
-    }
-
-    public function transactionsOut()
-    {
-        return $this->hasMany(Transaction::class, 'from_id');
-    }
-
     public function transactions()
     {
         return Transaction::with(['from', 'to'])
@@ -82,5 +71,15 @@ class User extends Authenticatable
     public function getBalance(): float
     {
         return $this->transactionsIn()->sum('amount') - $this->transactionsOut()->sum('amount');
+    }
+
+    public function transactionsIn()
+    {
+        return $this->hasMany(Transaction::class, 'to_id');
+    }
+
+    public function transactionsOut()
+    {
+        return $this->hasMany(Transaction::class, 'from_id');
     }
 }
