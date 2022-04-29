@@ -35,6 +35,6 @@ class Checkout extends Authenticatable
 
     public function festival()
     {
-        return $this->belongsTo('App\Models\User');
+        return $this->belongsTo('App\Models\User', 'user_id');
     }
 }

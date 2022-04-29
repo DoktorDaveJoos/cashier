@@ -1,4 +1,6 @@
 <script setup>
+import BreezeDropdown from '@/Components/Dropdown.vue';
+import BreezeDropdownLink from '@/Components/DropdownLink.vue';
 import InitialsRoundAvatar from "@/Components/InitialsRoundAvatar";
 import {Link} from '@inertiajs/inertia-vue3';</script>
 
@@ -162,15 +164,23 @@ import {Link} from '@inertiajs/inertia-vue3';</script>
                             <initials-round-avatar
                                 :name="$page.props.auth.user.name"
                             ></initials-round-avatar>
-
-                            <div class="ml-3">
-                                <p class="text-sm font-medium">
-                                    {{ $page.props.auth.user.name }}
-                                </p>
-                                <p class="text-xs font-medium text-indigo-400">
-                                    {{ $page.props.auth.user.email }}
-                                </p>
-                            </div>
+                            <BreezeDropdown align="top" width="48">
+                                <template #trigger>
+                                    <div class="ml-3">
+                                        <p class="text-sm font-medium">
+                                            {{ $page.props.auth.user.name }}
+                                        </p>
+                                        <p class="text-xs font-medium text-indigo-400">
+                                            {{ $page.props.auth.user.email }}
+                                        </p>
+                                    </div>
+                                </template>
+                                <template #content>
+                                    <BreezeDropdownLink :href="route('logout')" method="post" as="button">
+                                        Log Out
+                                    </BreezeDropdownLink>
+                                </template>
+                            </BreezeDropdown>
                         </div>
                     </a>
                 </div>

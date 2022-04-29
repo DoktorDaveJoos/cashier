@@ -38,6 +38,6 @@ class CheckoutLoginController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('checkout', ['uuid' => $uuid]));
+        return redirect()->intended(route('checkout.index', ['uuid' => $uuid]));
     }
 }
