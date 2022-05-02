@@ -2,28 +2,38 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateCheckoutRequest;
 use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Ramsey\Uuid\Uuid;
+use Inertia\Response;
 
 class CheckoutController extends Controller
 {
 
-    public function index(Request $request, $uuid): \Inertia\Response
+    public function index(Request $request, $uuid): Response
     {
         $products = auth()->user()->festival->products;
-
-        if ($request->input('user')) {
-            ray($request->input('user'));
-        }
 
         return Inertia::render('Checkout/Index', [
             'uuid' => $uuid,
             'products' => $products,
-            'customer' => Inertia::lazy(fn() => User::find($request->input('user')))
+            'payment' => Inertia::lazy(fn() => self::fetchPayingCustomer($request->input('user'))),
         ]);
+    }
+
+    private static function fetchPayingCustomer(string $userId): array
+    {
+        try {
+            $user = User::findOrFail($userId);
+            return [
+                'customer' => $user->toJson(),
+            ];
+        } catch (ModelNotFoundException $e) {
+            return [
+                'errors' => [$e->getMessage()]
+            ];
+        }
     }
 
 //    public function create(CreateCheckoutRequest $createCheckout) {

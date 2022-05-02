@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -23,6 +24,10 @@ class User extends Authenticatable
         'email',
         'password',
         'type',
+    ];
+
+    protected $appends = [
+        'balance',
     ];
 
     /**
@@ -68,9 +73,11 @@ class User extends Authenticatable
             ->paginate(20);
     }
 
-    public function getBalance(): float
+    protected function balance(): Attribute
     {
-        return $this->transactionsIn()->sum('amount') - $this->transactionsOut()->sum('amount');
+        return new Attribute(
+            get: fn() => $this->transactionsIn()->sum('amount') - $this->transactionsOut()->sum('amount'),
+        );
     }
 
     public function transactionsIn()

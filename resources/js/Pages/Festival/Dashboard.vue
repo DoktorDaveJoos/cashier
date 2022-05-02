@@ -53,7 +53,7 @@
 
 <script>
 import TransactionCard from "@/Components/TransactionCard";
-import Layout from '@/Layouts/Festival/AuthenticatedFestival';
+import Layout from '@/Layouts/Festival/Authenticated';
 
 export default {
     layout: Layout,

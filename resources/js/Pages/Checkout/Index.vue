@@ -109,11 +109,10 @@
                            class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                            placeholder="Type in ID of User">
                 </div>
-                <button type="submit"
-                        class="mt-3 w-full inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                    Read
-                </button>
+                <ActionButton class="ml-3" :is-disabled="loading">Read</ActionButton>
             </form>
+
+            <Alert class="mt-4" v-if="payment?.errors" :errors="payment?.errors"></Alert>
         </template>
 
         <template v-else-if="paymentSteps.read && !paymentSteps.validate">
@@ -145,11 +144,15 @@
 import {Inertia} from '@inertiajs/inertia';
 import Layout from '@/Layouts/Checkout/Authenticated';
 import Modal from '@/Components/Modal';
+import Alert from '@/Components/Alert';
+import ActionButton from "@/Components/ActionButton";
 
 export default {
     layout: Layout,
     components: {
-        Modal: Modal
+        Modal: Modal,
+        Alert: Alert,
+        ActionButton: ActionButton
     },
 
     data() {
@@ -161,14 +164,15 @@ export default {
             paymentSteps: {
                 read: false,
                 validate: false
-            }
+            },
+            loading: false,
         }
     },
 
     props: {
         uuid: String,
         products: Array,
-        customer: {
+        payment: {
             type: Object,
             default: null
         }
@@ -178,16 +182,20 @@ export default {
         addProductToOrder(product) {
             this.order.push(product);
         },
-        showModal () {
-          this.modal = true;
+        showModal() {
+            this.modal = true;
         },
-        submitId() {
-            const url = `${route('checkout.index', this.uuid)}?user=${this.userId}`
 
-            Inertia.visit(url, {
-                    only: ['customer'],
-                    onSuccess: () => this.paymentSteps.read = true,
-                    preserveState: true
+        submitId() {
+            const url = new URL(route('checkout.index', this.uuid));
+            url.searchParams.append('user', this.userId);
+
+            Inertia.visit(url,
+                {
+                    only: ['payment'],
+                    onStart: () => this.loading = true,
+                    onFinish: () => this.loading = false,
+                    preserveState: true,
                 }
             );
         },

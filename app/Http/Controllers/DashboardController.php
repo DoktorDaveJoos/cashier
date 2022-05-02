@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\Transaction;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
@@ -21,9 +20,9 @@ class DashboardController extends Controller
             return $this->handleFestivalIndex($request);
         }
 
-        return Inertia::render('DashboardVisitor', [
-            'balance' => $user->getBalance(),
-            'transactions' => $user->transactions()
+        return Inertia::render('Customer/Index', [
+            'balance' => $user->balance,
+            'transactions' => $user->transactions(),
         ]);
     }
 
@@ -42,8 +41,8 @@ class DashboardController extends Controller
 
         $transactions = $user->transactions();
 
-        return Inertia::render('DashboardVisitor', [
-            'balance' => $user->getBalance(),
+        return Inertia::render('Customer/Index', [
+            'balance' => $user->balance,
             'transactions' => $transactions,
         ]);
     }
@@ -55,12 +54,12 @@ class DashboardController extends Controller
         $transCmd = DB::selectOne('select count(*) as count from transactions where from_id = ? or to_id = ?', [$user->id, $user->id]);
         $transactions = $user->transactions();
 
-        return Inertia::render('Festival/DashboardFestival', [
-            'balance' => $user->getBalance(),
+        return Inertia::render('Festival/Dashboard', [
+            'balance' => $user->balance,
             'checkouts' => $user->checkouts,
             'products' => $user->products,
             'transactions' => $transactions,
-            'transactionCount' => $transCmd->count
+            'transactionCount' => $transCmd->count,
         ]);
     }
 

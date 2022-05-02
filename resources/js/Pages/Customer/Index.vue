@@ -1,5 +1,5 @@
 <script setup>
-import BreezeAuthenticatedLayout from "@/Layouts/AuthenticatedVisitor.vue";
+import BreezeAuthenticatedLayout from "@/Layouts/Customer/Authenticated.vue";
 import { Head } from "@inertiajs/inertia-vue3";
 import TransactionCard from "@/Components/TransactionCard";
 import { Inertia } from "@inertiajs/inertia";
