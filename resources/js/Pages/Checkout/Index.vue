@@ -89,7 +89,7 @@
                       d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" />
             </svg>
         </div>
-        <template v-if="!paymentSteps.read">
+        <template v-if="paymentSteps === 'read'">
 
             <div class="mt-3 text-center sm:mt-5">
                 <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">Reading Customer-ID</h3>
@@ -112,12 +112,12 @@
                 <ActionButton class="ml-3" :is-disabled="loading">Read</ActionButton>
             </form>
 
-            <Alert class="mt-4" v-if="payment?.errors" :errors="payment?.errors"></Alert>
+            <Alert class="mt-4" v-if="payment?.errors.length > 0" :errors="payment?.errors"></Alert>
         </template>
 
-        <template v-else-if="paymentSteps.read && !paymentSteps.validate">
+        <template v-else-if="paymentSteps === 'validate'">
             <div class="mt-3 text-center sm:mt-5">
-                <h3 class="text-lg leading-6 font-medium text-gray-900">{{ customer.name }}</h3>
+                <h3 class="text-lg leading-6 font-medium text-gray-900">{{ payment.user.name }}</h3>
                 <div class="mt-2">
                     <p>
                     <span
@@ -134,6 +134,26 @@
                 Process Payment
             </button>
 
+        </template>
+
+        <template v-else-if="paymentSteps === 'finished'">
+            <h1> Finished </h1>
+        </template>
+
+        <template v-else>
+            <div class="mt-3 text-center sm:mt-5">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">Something went wrong</h3>
+                <div class="mt-2">
+                    <p class="text-sm text-gray-500">Sorry for the inconvenience.</p>
+                </div>
+            </div>
+
+            <button
+                @click="reload()"
+                class="flex w-full justify-center px-3 py-2 bg-indigo-200 text-indigo-700 rounded-lg mr-4 mt-4"
+            >
+                Reload
+            </button>
         </template>
 
     </Modal>
@@ -157,14 +177,11 @@ export default {
 
     data() {
         return {
-            // TODO Remove
             modal: false,
+            // TODO Remove
             userId: null,
             order: [],
-            paymentSteps: {
-                read: false,
-                validate: false
-            },
+            paymentSteps: 'read',
             loading: false,
         }
     },
@@ -174,7 +191,10 @@ export default {
         products: Array,
         payment: {
             type: Object,
-            default: null
+            default: {
+                user: null,
+                errors: []
+            }
         }
     },
 
@@ -194,7 +214,7 @@ export default {
                 {
                     only: ['payment'],
                     onStart: () => this.loading = true,
-                    onFinish: () => this.loading = false,
+                    onFinish: () => this.prepareNextStep(),
                     preserveState: true,
                 }
             );
@@ -208,12 +228,29 @@ export default {
             };
 
             Inertia.post(route('checkout.store', this.uuid), transaction, {
-                onFinish: () => {
-                    this.paymentSteps.read = false;
-                    this.modal = false;
-                    this.order = [];
-                }
+                onFinish: () => this.prepareNextStep()
             });
+        },
+
+        prepareNextStep() {
+            this.loading = false;
+
+            if (this.paymentSteps === 'read') {
+                this.paymentSteps = 'validate';
+                return;
+            }
+
+            if (this.paymentSteps === 'validate') {
+                this.paymentSteps = 'finished';
+                setTimeout(() => {
+                    this.reload();
+                }, 1000);
+            }
+
+        },
+
+        reload() {
+            Inertia.visit(route('checkout.index', this.uuid));
         }
     },
 

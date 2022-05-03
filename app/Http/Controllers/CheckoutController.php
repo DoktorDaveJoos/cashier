@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PaymentSteps;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -18,21 +19,19 @@ class CheckoutController extends Controller
         return Inertia::render('Checkout/Index', [
             'uuid' => $uuid,
             'products' => $products,
-            'payment' => Inertia::lazy(fn() => self::fetchPayingCustomer($request->input('user'))),
+            'payment' => Inertia::lazy(fn() => self::fetchPayingCustomer($request)),
         ]);
     }
 
-    private static function fetchPayingCustomer(string $userId): array
+    private static function fetchPayingCustomer(Request $request)
     {
         try {
-            $user = User::findOrFail($userId);
-            return [
-                'customer' => $user->toJson(),
-            ];
+            $user = User::findOrFail($request->input('user'));
+            $lol =  PaymentSteps::withUser($user);
+            ray($lol);
+            return $lol;
         } catch (ModelNotFoundException $e) {
-            return [
-                'errors' => [$e->getMessage()]
-            ];
+            return PaymentSteps::withErrors([$e->getMessage()]);
         }
     }
 
